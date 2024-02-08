@@ -23,12 +23,41 @@ namespace BellyRedNovel
 
         private void AddItemBtn_Click(object sender, RoutedEventArgs e)
         {
+          
             // Retrieve data from textboxes
             string make = MakeTB.Text;
             string model = ModelTB.Text;
-            int year = int.Parse(YearTB.Text);
-            decimal price = decimal.Parse(PriceTB.Text);
-            int mileage = int.Parse(MileageTB.Text);
+
+            // Check if Year is a valid number
+            if (!int.TryParse(YearTB.Text, out int year))
+            {
+                MessageBox.Show("Please enter a valid number for the Year field.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Check if Price is a valid number
+            if (!decimal.TryParse(PriceTB.Text, out decimal price))
+            {
+                MessageBox.Show("Please enter a valid number for the Price field.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Check if Mileage is a valid number
+            if (!int.TryParse(MileageTB.Text, out int mileage))
+            {
+                MessageBox.Show("Please enter a valid number for the Mileage field.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // make sure all fields are valid before adding 
+            if (string.IsNullOrEmpty(MakeTB.Text) || string.IsNullOrEmpty(ModelTB.Text) ||
+            string.IsNullOrEmpty(YearTB.Text) || string.IsNullOrEmpty(PriceTB.Text) || string.IsNullOrEmpty(MileageTB.Text))
+            {
+                MessageBox.Show("Please enter a valid responses.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+
 
             // Create a new Car instance
             Car newCar = new Car()
@@ -203,9 +232,17 @@ namespace BellyRedNovel
 
         private void SaveCSVBtn_Click(object sender, RoutedEventArgs e) // Save to CSV file
         {
-            string filePath = NewFileTxt.Text + ".csv"; // The file name is going ot be what ever is in the newfiletxt.text 
-            WriteTransactions(filePath);
-            NewFileTxt.Clear();
+            if (string.IsNullOrEmpty(NewFileTxt.Text))
+            {
+                MessageBox.Show("Please enter a valid CSV Name.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            else
+            {
+                string filePath = NewFileTxt.Text + ".csv"; // The file name is going ot be what ever is in the newfiletxt.text 
+                WriteTransactions(filePath);
+                NewFileTxt.Clear();
+            }
         }
         public void WriteTransactions(string filePath) // Saving the observation list into excel CSV file. 
         {
